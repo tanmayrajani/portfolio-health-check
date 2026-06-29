@@ -53,11 +53,21 @@ principles in mind throughout:
   fund alongside several active funds in the same category, note that the index doesn't
   add a distinct manager bet — it's the benchmark the active funds are trying to beat.
   That's fine as a low-cost core, but it isn't "another fund" in the diversification sense.
+  This also shades how you read AMC spread: holding the *same index* across three AMCs
+  dilutes far less risk than spreading three active managers does, because index risk is
+  mostly operational / tracking, not manager / strategy. Respect a deliberate spread, but
+  it's fair to note the diminishing returns on duplicating an *index* in particular.
 
 - **Valuation and concentration are forward-looking risk signals.** Past returns describe
   what happened; portfolio P/E, top-10 weight, and number of stocks hint at what could
   happen next. Pricey, concentrated funds tend to fall hardest in a correction. Use these
   to talk about future risk, not just past performance.
+
+- **Check the user's factual claims against the data, not your priors.** When the user
+  pushes back with a specific assertion ("the Next 50 has actually beaten the Nifty 50
+  lately"), pull the numbers before you respond — generic framing ("Next 50 is just
+  riskier") is often wrong on the specifics, and Value Research will settle it across
+  1Y / 3Y / 5Y in seconds.
 
 - **You are not a financial advisor.** Present analysis that helps the user decide; don't
   issue confident buy/sell commands. Caveat clearly, and leave tax-sensitive sell
@@ -76,6 +86,19 @@ already know:
 - **Is the multi-fund / multi-AMC spread intentional?** e.g. separate accounts for spouse
   / parents, or deliberate AMC-risk dilution. This decides whether overlap is a flaw or a
   feature.
+- **What sits *outside* this MF portfolio?** Ask for the rest of the household balance
+  sheet — FD, EPF/PF, NPS, cash/savings, real estate, direct equity. A book that looks 2%
+  debt internally can be ~35% debt once a big FD + PF balance is counted, which completely
+  changes the risk read. **Do not flag "too aggressive", "no ballast", or "no emergency
+  fund" until you know what's held outside the funds.**
+- **Are any of these funds closed or frozen to fresh investment?** International / overseas
+  fund-of-funds in particular get shut to inflows under the RBI/SEBI overseas cap. This
+  cuts both ways: you can't recommend topping them up, and you must **not** recommend
+  exiting them either, since re-entry may be blocked.
+- **Confirm the plan on every holding — are they all Direct?** Ask explicitly and have the
+  user flag any Regular ones; don't wait for a name to look ambiguous. Users routinely
+  mislabel a Regular plan as Direct (or vice versa), and pulling the wrong plan invents a
+  bogus expense-ratio / "switch to Direct" recommendation off numbers that aren't theirs.
 - **Resolve any ambiguous or missing fund identity.** If a name doesn't map cleanly to one
   scheme on Value Research, ask the user to confirm the exact fund — including plan
   (Direct vs Regular) and option (Growth vs IDCW), since these change the numbers. Never
@@ -108,10 +131,20 @@ links; you are expected to go get the data.
 
 **Method — work category by category:**
 
+**At scale (say 40+ funds), triage rather than deep-reading everything.** Lean on the
+headline block plus trailing returns for most funds, and reserve the full risk-ratio /
+holdings work-up for the funds receiving the largest SIPs or flagged as outliers. Pure
+index funds only need expense ratio and tracking — not a full work-up.
+
 1. Open Value Research's Fund Compare tool:
    `https://www.valueresearchonline.com/funds/fund-compare/`. **Add each fund by typing its
    name into the search box and picking from the autocomplete**, then verify that every
-   fund you intended actually appears in the comparison before reading anything. Prefer
+   fund you intended actually appears in the comparison before reading anything. The picker
+   has a quirk: clicking a suggestion does **not** create a chip — it leaves the name as
+   text in the box and unlocks the *next* box. So the reliable pattern is click box → type
+   → wait for the dropdown → click the top suggestion → let the next box activate. Don't
+   click the next box while the dropdown is still open, or the click lands back in the
+   current box and appends text; confirm with a screenshot after each pick. Prefer
    this over constructing the compare URL from `peer-fund-search` parameters: the URL
    method *silently drops* any fund whose name string doesn't exactly match Value
    Research's official scheme name, and you won't notice the fund is missing. Users often
@@ -135,7 +168,11 @@ links; you are expected to go get the data.
 
    Note: `get_page_text` often returns only the first (Trailing Returns) tab because the
    others load as hidden panels. After clicking a tab, read it with a **screenshot** or
-   `read_page` on the now-visible table rather than trusting `get_page_text`.
+   `read_page` on the now-visible table rather than trusting `get_page_text`. That first
+   read still hands you the whole headline block (AUM, expense ratio, exit load, turnover,
+   riskometer, return-since-launch) plus trailing returns — which is enough to judge most
+   funds on its own. Only spend clicks on the Risk Ratios / Holdings tabs when they'd
+   actually change the verdict (a large-SIP fund, a flagged outlier, a valuation question).
 
 3. **If only one of the user's funds sits in a category,** open that fund's own Value
    Research page instead, and capture the same metrics plus its **category rank /
@@ -169,7 +206,9 @@ Work through each lens; for each, the point is *what good vs bad looks like and 
    reinforcing the imbalance?
 2. **Category mix vs goal & horizon** — is there too much small/mid risk for a near-term
    goal, or no large-cap / debt ballast for someone close to needing the money? Is there
-   needless category sprawl?
+   needless category sprawl? Judge ballast and emergency cover at the **household** level
+   using the outside-the-MF assets from Step 0 — the funds may look equity-heavy in
+   isolation while the household is well-cushioned by FD / PF / cash.
 3. **Fund quality within category** — judge on returns *and* risk-adjusted metrics
    (Sharpe, Sortino, alpha) *and* consistency across periods, not trailing return alone. A
    fund can have a great 5-year number while being structurally impaired right now
@@ -184,6 +223,11 @@ Work through each lens; for each, the point is *what good vs bad looks like and 
 7. **AMC / manager concentration** — respecting the user's stated intent, still flag
    genuine single points of failure (everything under one AMC, or a fund mid
    manager-transition).
+8. **Access constraints (closed / frozen funds)** — for any holding flagged in Step 0 as
+   closed to fresh investment, treat it as effectively one-way: **never propose
+   consolidating or exiting it** (re-entry may be blocked under the inflow cap) unless the
+   user explicitly wants out entirely, and never propose topping it up. Work around it
+   rather than through it.
 
 ## Step 5 — Deliver: the health-check + the 3 most impactful changes
 
@@ -200,8 +244,16 @@ Write the chat response in this shape:
      sell/switch is genuinely needed, say so and flag it as a tax / exit-load decision the
      user should make.
    Resist listing more than three — the discipline of picking the top three is the value.
-4. **Close** with the not-a-financial-advisor caveat and an offer to model a specific split
-   or go deeper.
+
+   **Conserve the rupees.** Whenever a change reshuffles SIPs, the proposed target SIP total
+   must equal the current SIP total plus any amounts you've freed up — don't quietly invent
+   or lose money. Show the reconciliation so the plan is actually executable, not just
+   illustrative.
+4. **Close** with the not-a-financial-advisor caveat and an offer to go deeper — in
+   particular, offer a concrete **current-vs-target SIP table** (per-fund current vs target,
+   plus an explicit "stop these SIPs, keep the units" list and any hold-or-switch calls on
+   the existing corpus with exit-load / tax flags). Users almost always want this after the
+   health-check.
 
 Keep the prose natural and readable — tables where they earn their place, plain paragraphs
 elsewhere, not a wall of bullets.
