@@ -1,0 +1,29 @@
+{
+  "skill_name": "portfolio-health-check",
+  "evals": [
+    {
+      "id": 0,
+      "name": "multi-category-retirement",
+      "prompt": "I'm 34 and investing for retirement, roughly 25 years out, and I'm comfortable with aggressive risk. Can you review my SIP portfolio and tell me what to change? Monthly SIP with current invested value in brackets:\n- Parag Parikh Flexi Cap Direct - 30k (8.5L)\n- Quant Small Cap Direct - 15k (4.2L)\n- Nippon India Small Cap Direct - 10k (3.1L)\n- HDFC Mid-Cap Opportunities Direct - 12k (2.8L)\n- Mirae Asset Large Cap Direct - 8k (3.5L)\n- UTI Nifty 50 Index Direct - 10k (5L)",
+      "expected_output": "Pulls Value Research data per category via Chrome; gives a qualitative health-check (strengths/weaknesses/risk flags) and exactly 3 ranked changes. Should notice the two small-cap funds (overlap), the Nifty50 index + Mirae large cap overlap, evaluate funds within category, look at corpus vs inflow split, and build a live artifact. No across-category ranking. Includes not-a-financial-advisor caveat.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 1,
+      "name": "near-term-goal-mismatch-ambiguous",
+      "prompt": "need help with my mutual funds. im saving for a house down payment in about 3 years. these are monthly sips, invested value in brackets:\n- SBI Bluechip 10000 (2.4 lakh)\n- axis midcap reg 8000 (1.9 lakh)\n- icici pru smallcap 12000 (1.5 lakh)\n- some kotak flexi fund 5000 (90k)\n- parag parikh elss 6000 (1.1 lakh)",
+      "expected_output": "Should flag the core problem: a 3-year goal sitting almost entirely in mid/small-cap and ELSS (lock-in) equity is a horizon mismatch and needs debt/ballast. Should ask to confirm the ambiguous 'some kotak flexi fund' before analysing it, and note 'axis midcap reg' is a Regular plan (cost drag). Pulls VRO data, gives health-check + 3 changes, builds artifact, includes caveat.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 2,
+      "name": "intentional-amc-spread-inflow-focus",
+      "prompt": "My portfolio is spread across accounts for me, my wife and my parents on purpose, to reduce AMC risk. All equity, long horizon. Monthly SIP with current value in brackets:\n- Motilal Oswal Midcap Direct - 4k (4.47L)\n- Motilal Oswal Nifty Midcap 150 Index Direct - 10k (4.44L)\n- Invesco India Midcap Direct - 25k (1.96L)\n- Edelweiss Mid Cap Direct - 20k (1.45L)\n- Kotak Emerging Equity Direct - 8k (1.06L)\nHow should I think about dividing new money going forward?",
+      "expected_output": "Should respect the intentional AMC spread (NOT reflexively tell them to consolidate), recognise these are all mid-cap, and focus on dividing new SIP money. Should distinguish corpus weights (two-thirds in the two MO funds) from inflow weights, note the index fund adds beta not manager diversification, rate funds within category, and give 3 ranked changes oriented around the new-money split. Pulls VRO data, builds artifact, caveat.",
+      "files": [],
+      "assertions": []
+    }
+  ]
+}
