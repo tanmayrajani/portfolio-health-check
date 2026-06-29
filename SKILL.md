@@ -7,10 +7,11 @@ description: >-
   health-checked, rebalanced, or asks things like "how is my portfolio doing", "is this a
   good set of funds", "where should I put my new SIP money", or "what should I change".
   Works across every category (large / mid / small cap, flexi, ELSS, hybrid, debt, index,
-  international). The skill browses Value Research Online itself to pull each fund's
-  performance, risk, holdings and valuation — so use it even when the user provides no
-  links. Trigger generously: any list of named funds with rupee amounts attached is a
-  strong signal, even if the user just pastes a table without asking a polished question.
+  international). The skill browses Value Research Online itself via linked Chrome to pull
+  each fund's performance, risk, holdings and valuation — so use it even when the user
+  provides no links. Trigger generously: any list of named funds with rupee amounts
+  attached is a strong signal, even if the user just pastes a table without asking a
+  polished question.
 ---
 
 # Portfolio Health Check
@@ -64,9 +65,9 @@ principles in mind throughout:
 
 ## Step 0 — Understand the setup before analysing anything
 
-Skim what the user gave you. Then, in a single concise round (use a structured
-clarifying-question tool if one is available; otherwise just ask in chat), clarify only
-what you genuinely need and don't already know:
+Skim what the user gave you. Then, in a single concise round (use the AskUserQuestion tool
+if available; otherwise ask in chat), clarify only what you genuinely need and don't
+already know:
 
 - **Goal and horizon** — retirement in 20 years, a house in 3, a child's education? This
   determines whether the category mix even makes sense (a 3-year goal sitting in small-cap
@@ -100,11 +101,10 @@ Then compute and keep handy:
 Immediately note any place where corpus weight and inflow weight diverge sharply — that
 contrast often drives the most useful observation later.
 
-## Step 2 — Pull the data from Value Research yourself
+## Step 2 — Pull the data from Value Research yourself (linked Chrome)
 
-Do this on your own using whatever web-browsing tools you have available (a browser tool,
-fetch tool, or web search). Do not wait for the user to provide links; you are expected to
-go get the data.
+Do this on your own using the Claude-in-Chrome tools. Do not wait for the user to provide
+links; you are expected to go get the data.
 
 **Method — work category by category:**
 
@@ -133,10 +133,9 @@ go get the data.
    - **Holdings** (Portfolio P/E, P/B, No. of Stocks, Top 3 Sectors %, Top 5 / Top 10
      stock concentration, and the Top Holdings list).
 
-   Note: a plain text-extraction of the page often only returns the first (Trailing
-   Returns) tab because the others load as hidden panels. After switching tabs, re-fetch
-   or re-render the page (a screenshot, or re-reading the now-visible DOM/HTML) rather than
-   trusting the first text dump.
+   Note: `get_page_text` often returns only the first (Trailing Returns) tab because the
+   others load as hidden panels. After clicking a tab, read it with a **screenshot** or
+   `read_page` on the now-visible table rather than trusting `get_page_text`.
 
 3. **If only one of the user's funds sits in a category,** open that fund's own Value
    Research page instead, and capture the same metrics plus its **category rank /
@@ -207,23 +206,19 @@ Write the chat response in this shape:
 Keep the prose natural and readable — tables where they earn their place, plain paragraphs
 elsewhere, not a wall of bullets.
 
-## Step 6 — Build a reopenable summary
+## Step 6 — Build the live artifact
 
-If your environment supports a live/reopenable artifact (e.g. a canvas, artifact panel, or
-HTML preview), use it to save a self-contained summary page; otherwise produce a clean
-Markdown or HTML file the user can save and reopen. Embed the analysis directly — the
-portfolio data isn't pulled from a connector, so no external calls are needed at this
-stage. Include:
+Use the `create_artifact` tool to save a self-contained summary page the user can reopen
+later. The portfolio data does not come from a connector, so **embed the analysis directly
+in the page** (no connector calls needed). Include:
 
 - The per-category comparison tables.
-- Allocation visuals — corpus-vs-inflow and category-mix charts, if your output format
-  supports charts (e.g. Chart.js via CDN in an HTML artifact); otherwise a clear table or
-  ASCII/text breakdown is fine.
+- Allocation visuals — corpus-vs-inflow and category-mix charts. Chart.js via CDN is
+  allowed; keep it clean.
 - The health-check summary (strengths / weaknesses / risk flags).
 - The three changes, clearly ranked.
 
-Tell the user the summary is saved and reopenable (or where to find the file), then offer
-next steps.
+Tell the user the artifact is saved and reopenable, then offer next steps.
 
 ## A note on tone and honesty
 
