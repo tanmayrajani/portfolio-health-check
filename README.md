@@ -1,6 +1,6 @@
 # portfolio-health-check
 
-A Claude skill that reviews, rates, and optimizes a mutual-fund / SIP portfolio, then
+An agent skill that reviews, rates, and optimizes a mutual-fund / SIP portfolio, then
 recommends the three highest-impact changes.
 
 Given a list of funds with current invested values and monthly SIP amounts, the skill:
@@ -25,5 +25,5 @@ manager diversification. It is an analysis aid, not financial advice.
 
 ## Install
 
-Place this folder in your Claude skills directory (or load it however your Claude client
-supports skills).
+Place this folder in your agent's skills directory, or load it however your AI agent or
+assistant supports skills.
